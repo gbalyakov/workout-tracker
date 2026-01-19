@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>W1 Mon</title>
     <style>
         * {
@@ -14,39 +14,116 @@
             user-select: none;
         }
 
-        html {
-            touch-action: pan-y;
-            -webkit-text-size-adjust: 100%;
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: #000;
             color: #fff;
-            width: 100vw;
-            height: 100vh;
-            position: fixed;
-            overflow: hidden;
             display: flex;
-            flex-direction: column;
-            touch-action: none;
-        }
-
-        /* Curved top controls */
-        .top-controls {
-            position: relative;
-            height: 80px;
-            flex-shrink: 0;
-            display: flex;
-            align-items: flex-end;
+            align-items: center;
             justify-content: center;
-            padding: 0 30px 10px 30px;
-            gap: 8px;
         }
 
-        .top-title {
+        .watch {
+            width: 408px;
+            height: 408px;
+            max-width: 100vw;
+            max-height: 100vh;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Progress ring */
+        .progress-ring {
             position: absolute;
-            top: 8px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .progress-bg {
+            fill: none;
+            stroke: rgba(255,255,255,0.1);
+            stroke-width: 8;
+        }
+
+        .progress-fill {
+            fill: none;
+            stroke: #00ff88;
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.4s ease;
+        }
+
+        /* Top button row */
+        .top-buttons {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.92);
+        }
+
+        .btn-skip {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+        }
+
+        .btn-pause {
+            background: rgba(255,193,7,0.25);
+            color: #ffc107;
+            border: 1px solid rgba(255,193,7,0.4);
+        }
+
+        .btn-pause.paused {
+            background: rgba(0,255,136,0.25);
+            color: #00ff88;
+            border-color: rgba(0,255,136,0.4);
+        }
+
+        .btn-next {
+            background: #00ff88;
+            color: #000;
+            padding: 14px 28px;
+            font-weight: 800;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Title */
+        .title {
+            position: absolute;
+            top: 70px;
             left: 0;
             right: 0;
             text-align: center;
@@ -54,68 +131,21 @@
             font-weight: 700;
             color: #00ff88;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
         }
 
-        .progress-bar {
-            position: absolute;
-            top: 24px;
-            left: 30px;
-            right: 30px;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: #00ff88;
-            transition: width 0.3s ease;
-        }
-
-        /* Buttons in curved arrangement */
-        .btn {
-            padding: 10px 14px;
-            border: none;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            cursor: pointer;
-            transition: transform 0.1s ease;
-            white-space: nowrap;
-        }
-
-        .btn:active {
-            transform: scale(0.92);
-        }
-
-        .btn-primary {
-            background: #00ff88;
-            color: #000;
-            padding: 12px 20px;
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.15);
-            color: #fff;
-        }
-
-        .btn-pause {
-            background: rgba(255, 193, 7, 0.25);
-            color: #ffc107;
-            border: 1px solid rgba(255, 193, 7, 0.4);
-        }
-
-        /* Main content - centered */
+        /* Main content */
         .content {
-            flex: 1;
+            position: absolute;
+            top: 90px;
+            left: 40px;
+            right: 40px;
+            bottom: 40px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 0 35px 60px 35px;
-            overflow: hidden;
+            text-align: center;
         }
 
         .phase {
@@ -123,52 +153,45 @@
             font-weight: 700;
             color: #00ff88;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 10px;
-            text-align: center;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
         }
 
         .exercise-name {
-            font-size: 17px;
-            font-weight: 700;
-            text-align: center;
+            font-size: 20px;
+            font-weight: 800;
             line-height: 1.2;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         .exercise-sets {
-            font-size: 28px;
+            font-size: 40px;
             font-weight: 900;
             color: #00ff88;
-            text-align: center;
-            margin: 10px 0;
+            margin: 8px 0;
         }
 
         .exercise-weight {
-            font-size: 14px;
+            font-size: 16px;
             color: #00ccff;
-            text-align: center;
-            margin-top: 5px;
+            font-weight: 600;
         }
 
         .exercise-notes {
             font-size: 11px;
-            color: rgba(255, 255, 255, 0.75);
-            text-align: center;
+            color: rgba(255,255,255,0.7);
             line-height: 1.4;
             margin-top: 12px;
             padding: 8px 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            max-width: 100%;
+            background: rgba(255,255,255,0.08);
+            border-radius: 10px;
         }
 
         .timer {
-            font-size: 64px;
+            font-size: 72px;
             font-weight: 900;
             color: #00ccff;
-            text-align: center;
-            margin: 15px 0;
+            margin: 8px 0;
             font-variant-numeric: tabular-nums;
             letter-spacing: -3px;
         }
@@ -176,75 +199,100 @@
         .timer-label {
             font-size: 9px;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.5);
-            text-align: center;
-            margin-bottom: 8px;
+            color: rgba(255,255,255,0.5);
             letter-spacing: 1px;
-        }
-
-        .next {
-            margin-top: 15px;
-            padding: 8px 14px;
-            background: rgba(0, 204, 255, 0.15);
-            border: 1px solid rgba(0, 204, 255, 0.35);
-            border-radius: 8px;
-            text-align: center;
-            max-width: 100%;
-        }
-
-        .next-label {
-            font-size: 8px;
-            color: #00ccff;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
             margin-bottom: 4px;
         }
 
+        .next-up {
+            margin-top: 12px;
+            padding: 6px 12px;
+            background: rgba(0,204,255,0.12);
+            border: 1px solid rgba(0,204,255,0.3);
+            border-radius: 8px;
+        }
+
+        .next-label {
+            font-size: 7px;
+            color: #00ccff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
         .next-text {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
-            color: #fff;
+            margin-top: 2px;
         }
 
-        .completion {
+        /* Start screen */
+        .start-screen {
             text-align: center;
-            padding: 20px;
         }
 
+        .start-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .start-title {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .start-subtitle {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* Completion */
         .completion-icon {
             font-size: 48px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .completion-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 800;
-            margin-bottom: 10px;
+            color: #00ff88;
+            margin-bottom: 8px;
         }
 
         .completion-msg {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.75);
+            font-size: 11px;
+            color: rgba(255,255,255,0.7);
             line-height: 1.5;
-        }
-
-        .hidden {
-            display: none;
         }
     </style>
 </head>
 <body>
-    <div class="top-controls">
-        <div class="top-title">W1 MON • STRENGTH A</div>
-        <div class="progress-bar">
-            <div class="progress-fill" id="progress"></div>
-        </div>
-        <button class="btn btn-secondary hidden" id="skipBtn">Skip</button>
-        <button class="btn btn-pause hidden" id="pauseBtn">Pause</button>
-        <button class="btn btn-primary" id="nextBtn">Start</button>
-    </div>
+    <div class="watch">
+        <!-- Progress ring -->
+        <svg class="progress-ring" viewBox="0 0 408 408">
+            <circle class="progress-bg" cx="204" cy="204" r="198"/>
+            <circle class="progress-fill" id="progress" cx="204" cy="204" r="198"/>
+        </svg>
 
-    <div class="content" id="content"></div>
+        <!-- Top buttons -->
+        <div class="top-buttons">
+            <button class="btn btn-skip hidden" id="skipBtn">Skip</button>
+            <button class="btn btn-pause hidden" id="pauseBtn">Pause</button>
+            <button class="btn btn-next" id="nextBtn">Start</button>
+        </div>
+
+        <!-- Title -->
+        <div class="title">W1 MON • STRENGTH A</div>
+
+        <!-- Content -->
+        <div class="content" id="content">
+            <div class="start-screen">
+                <div class="start-icon">💪</div>
+                <div class="start-title">Ready?</div>
+                <div class="start-subtitle">Tap START to begin</div>
+            </div>
+        </div>
+    </div>
 
     <script>
         var workout = {
@@ -273,8 +321,8 @@
         };
 
         var section = 'warmup';
-        var index = 0;
-        var timer = null;
+        var idx = 0;
+        var tmr = null;
         var timeLeft = 0;
         var paused = false;
         var resting = false;
@@ -283,41 +331,51 @@
         var pauseBtn = document.getElementById('pauseBtn');
         var skipBtn = document.getElementById('skipBtn');
         var content = document.getElementById('content');
-        var progress = document.getElementById('progress');
+        var progressEl = document.getElementById('progress');
 
-        function total() {
+        var circumference = 2 * Math.PI * 198;
+        progressEl.style.strokeDasharray = circumference;
+        progressEl.style.strokeDashoffset = circumference;
+
+        function totalEx() {
             return workout.warmup.length + workout.main.length;
         }
 
-        function current() {
-            return section === 'warmup' ? index : workout.warmup.length + index;
+        function currentIdx() {
+            return section === 'warmup' ? idx : workout.warmup.length + idx;
         }
 
         function updateProgress() {
-            var pct = (current() / total()) * 100;
-            progress.style.width = pct + '%';
+            var pct = currentIdx() / totalEx();
+            progressEl.style.strokeDashoffset = circumference - (pct * circumference);
         }
 
         function getEx() {
-            return section === 'warmup' ? workout.warmup[index] : workout.main[index];
+            return section === 'warmup' ? workout.warmup[idx] : workout.main[idx];
         }
 
-        function getNext() {
-            if (section === 'warmup' && index + 1 < workout.warmup.length) return workout.warmup[index + 1];
+        function getNextEx() {
+            if (section === 'warmup' && idx + 1 < workout.warmup.length) return workout.warmup[idx + 1];
             if (section === 'warmup') return workout.main[0];
-            if (index + 1 < workout.main.length) return workout.main[index + 1];
+            if (idx + 1 < workout.main.length) return workout.main[idx + 1];
             return null;
         }
 
-        function show() {
+        function fmt(s) {
+            var m = Math.floor(s / 60);
+            var sec = s % 60;
+            return m + ':' + (sec < 10 ? '0' : '') + sec;
+        }
+
+        function render() {
             var ex = getEx();
-            var next = getNext();
-            var html = '<div class="phase">' + ex.phase + '</div>' +
-                '<div class="exercise-name">' + ex.name + '</div>';
+            var nxt = getNextEx();
+            var html = '<div class="phase">' + ex.phase + '</div>';
+            html += '<div class="exercise-name">' + ex.name + '</div>';
 
             if (ex.duration) {
-                html += '<div class="timer-label">Duration</div>' +
-                    '<div class="timer" id="timer">' + fmt(ex.duration) + '</div>';
+                html += '<div class="timer-label">Duration</div>';
+                html += '<div class="timer" id="timer">' + fmt(ex.duration) + '</div>';
             } else {
                 html += '<div class="exercise-sets">' + ex.sets + '</div>';
                 if (ex.weight) html += '<div class="exercise-weight">💪 ' + ex.weight + '</div>';
@@ -325,9 +383,9 @@
 
             if (ex.notes) html += '<div class="exercise-notes">' + ex.notes + '</div>';
 
-            if (next) {
-                html += '<div class="next"><div class="next-label">Next</div>' +
-                    '<div class="next-text">' + next.name + '</div></div>';
+            if (nxt) {
+                html += '<div class="next-up"><div class="next-label">Next</div>';
+                html += '<div class="next-text">' + nxt.name + '</div></div>';
             }
 
             content.innerHTML = html;
@@ -338,153 +396,164 @@
                 nextBtn.textContent = 'Next';
                 pauseBtn.classList.remove('hidden');
                 skipBtn.classList.remove('hidden');
-            } else if (!resting) {
+            } else {
                 nextBtn.textContent = 'Done';
                 pauseBtn.classList.add('hidden');
                 skipBtn.classList.add('hidden');
             }
         }
 
-        function showRest(dur) {
+        function renderRest(dur, nextExName) {
             resting = true;
-            content.innerHTML = '<div class="phase">Rest Period</div>' +
-                '<div class="exercise-name">Recover</div>' +
-                '<div class="timer-label">Time Left</div>' +
-                '<div class="timer" id="timer">' + fmt(dur) + '</div>' +
-                '<div class="exercise-notes">Get ready</div>';
+            var html = '<div class="phase">Rest</div>';
+            html += '<div class="exercise-name">Recover</div>';
+            html += '<div class="timer-label">Time Left</div>';
+            html += '<div class="timer" id="timer">' + fmt(dur) + '</div>';
+            if (nextExName) {
+                html += '<div class="next-up"><div class="next-label">Up Next</div>';
+                html += '<div class="next-text">' + nextExName + '</div></div>';
+            }
+            content.innerHTML = html;
             startTimer(dur);
             nextBtn.textContent = 'Skip';
             pauseBtn.classList.remove('hidden');
             skipBtn.classList.add('hidden');
         }
 
-        function fmt(s) {
-            var m = Math.floor(s / 60);
-            var sec = s % 60;
-            return m + ':' + (sec < 10 ? '0' : '') + sec;
-        }
-
         function startTimer(dur) {
             timeLeft = dur;
-            updateTimer();
-            if (timer) clearInterval(timer);
-            timer = setInterval(function() {
+            if (tmr) clearInterval(tmr);
+            tmr = setInterval(function() {
                 if (!paused) {
                     timeLeft--;
-                    updateTimer();
+                    var el = document.getElementById('timer');
+                    if (el) el.textContent = fmt(timeLeft);
                     if (timeLeft <= 0) {
-                        clearInterval(timer);
-                        beep();
-                        if (resting) {
-                            resting = false;
-                            show();
-                        } else {
-                            next();
-                        }
+                        clearInterval(tmr);
+                        tmr = null;
+                        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+                        onTimerEnd();
                     }
                 }
             }, 1000);
         }
 
-        function updateTimer() {
-            var t = document.getElementById('timer');
-            if (t) t.textContent = fmt(timeLeft);
-        }
-
-        function beep() {
-            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-        }
-
-        function next() {
+        function onTimerEnd() {
             if (resting) {
-                clearInterval(timer);
+                // Rest finished - move to next exercise
                 resting = false;
-                show();
-                return;
-            }
-
-            if (section === 'warmup') {
-                index++;
-                if (index >= workout.warmup.length) {
-                    section = 'main';
-                    index = 0;
-                }
-                show();
+                moveToNextExercise();
             } else {
+                // Timed exercise finished - check if rest needed or move on
                 var ex = getEx();
-                if (ex.rest) {
-                    showRest(ex.rest);
+                if (section === 'main' && ex.rest) {
+                    var nxt = getNextEx();
+                    renderRest(ex.rest, nxt ? nxt.name : null);
                 } else {
-                    index++;
-                    if (index >= workout.main.length) {
-                        done();
-                    } else {
-                        show();
-                    }
+                    moveToNextExercise();
                 }
             }
         }
 
-        function togglePause() {
-            paused = !paused;
-            pauseBtn.textContent = paused ? 'Resume' : 'Pause';
-            pauseBtn.style.background = paused ? 'rgba(0, 255, 136, 0.2)' : 'rgba(255, 193, 7, 0.25)';
+        function moveToNextExercise() {
+            if (section === 'warmup') {
+                idx++;
+                if (idx >= workout.warmup.length) {
+                    section = 'main';
+                    idx = 0;
+                }
+                render();
+            } else {
+                idx++;
+                if (idx >= workout.main.length) {
+                    complete();
+                } else {
+                    render();
+                }
+            }
         }
 
-        function done() {
-            content.innerHTML = '<div class="completion">' +
-                '<div class="completion-icon">🇧🇬💪</div>' +
+        function onNextClick() {
+            if (tmr) {
+                clearInterval(tmr);
+                tmr = null;
+            }
+
+            if (resting) {
+                // Skip rest - go to next exercise
+                resting = false;
+                moveToNextExercise();
+            } else {
+                // Done with current exercise
+                var ex = getEx();
+                if (section === 'main' && ex.rest) {
+                    // Show rest period
+                    var nxt = getNextEx();
+                    renderRest(ex.rest, nxt ? nxt.name : null);
+                } else {
+                    // No rest, move to next
+                    moveToNextExercise();
+                }
+            }
+        }
+
+        function complete() {
+            resting = false;
+            content.innerHTML = '<div class="completion-icon">🇧🇬💪</div>' +
                 '<div class="completion-title">W1 Mon Done!</div>' +
-                '<div class="completion-msg">HR under 165.<br>Walk home = cool-down.<br><br>Bulgaria is lucky to have you.</div>' +
-                '</div>';
-            nextBtn.textContent = 'Finish';
+                '<div class="completion-msg">HR under 165.<br>Walk home = cool-down.<br><br>Bulgaria is lucky to have you.</div>';
+            nextBtn.textContent = 'Restart';
             pauseBtn.classList.add('hidden');
             skipBtn.classList.add('hidden');
-            progress.style.width = '100%';
+            progressEl.style.strokeDashoffset = 0;
         }
 
-        nextBtn.addEventListener('click', function() {
-            if (nextBtn.textContent === 'Start') {
-                show();
-            } else if (nextBtn.textContent === 'Finish') {
-                if (confirm('Restart workout?')) location.reload();
+        nextBtn.onclick = function() {
+            var txt = nextBtn.textContent;
+            if (txt === 'Start') {
+                render();
+            } else if (txt === 'Restart') {
+                location.reload();
             } else {
-                next();
+                onNextClick();
             }
-        });
+        };
 
-        pauseBtn.addEventListener('click', togglePause);
-        skipBtn.addEventListener('click', function() {
-            clearInterval(timer);
-            next();
-        });
+        pauseBtn.onclick = function() {
+            paused = !paused;
+            pauseBtn.textContent = paused ? 'Resume' : 'Pause';
+            pauseBtn.classList.toggle('paused', paused);
+        };
+
+        skipBtn.onclick = function() {
+            if (tmr) {
+                clearInterval(tmr);
+                tmr = null;
+            }
+            if (resting) {
+                resting = false;
+                moveToNextExercise();
+            } else {
+                // Skip timed exercise - treat as done
+                onNextClick();
+            }
+        };
 
         // Prevent zoom
-        document.addEventListener('gesturestart', function(e) { e.preventDefault(); });
-        document.addEventListener('gesturechange', function(e) { e.preventDefault(); });
-        document.addEventListener('gestureend', function(e) { e.preventDefault(); });
-        
-        var lastTouch = 0;
-        document.addEventListener('touchend', function(e) {
-            var now = Date.now();
-            if (now - lastTouch <= 300) e.preventDefault();
-            lastTouch = now;
-        }, false);
-        
+        document.addEventListener('touchstart', function(e) {
+            if (e.touches.length > 1) e.preventDefault();
+        }, { passive: false });
+
         document.addEventListener('touchmove', function(e) {
             if (e.touches.length > 1) e.preventDefault();
         }, { passive: false });
 
-        // Prevent reload
-        window.addEventListener('beforeunload', function(e) {
-            if (section !== 'warmup' || index > 0) {
-                e.preventDefault();
-                e.returnValue = '';
-                return '';
-            }
-        });
-
-        updateProgress();
+        var lastTap = 0;
+        document.addEventListener('touchend', function(e) {
+            var now = Date.now();
+            if (now - lastTap < 300) e.preventDefault();
+            lastTap = now;
+        }, false);
     </script>
 </body>
 </html>
