@@ -32,17 +32,25 @@
             touch-action: none;
         }
 
-        /* Top bar - compact */
-        .top-bar {
-            background: rgba(0, 0, 0, 0.8);
-            padding: 6px 0;
-            text-align: center;
-            border-bottom: 1px solid #00ff88;
+        /* Curved top controls */
+        .top-controls {
+            position: relative;
+            height: 80px;
             flex-shrink: 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 0 30px 10px 30px;
+            gap: 8px;
         }
 
         .top-title {
-            font-size: 10px;
+            position: absolute;
+            top: 8px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 9px;
             font-weight: 700;
             color: #00ff88;
             text-transform: uppercase;
@@ -50,9 +58,12 @@
         }
 
         .progress-bar {
+            position: absolute;
+            top: 24px;
+            left: 30px;
+            right: 30px;
             height: 2px;
             background: rgba(255, 255, 255, 0.2);
-            margin: 4px 20px 0 20px;
         }
 
         .progress-fill {
@@ -61,135 +72,28 @@
             transition: width 0.3s ease;
         }
 
-        /* Main content - centered vertically */
-        .content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 0 30px;
-            overflow: hidden;
-        }
-
-        .phase {
-            font-size: 8px;
-            font-weight: 700;
-            color: #00ff88;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-            text-align: center;
-        }
-
-        .exercise-name {
-            font-size: 15px;
-            font-weight: 700;
-            text-align: center;
-            line-height: 1.2;
-            margin-bottom: 10px;
-            max-width: 100%;
-        }
-
-        .exercise-sets {
-            font-size: 22px;
-            font-weight: 900;
-            color: #00ff88;
-            text-align: center;
-            margin: 8px 0;
-        }
-
-        .exercise-weight {
-            font-size: 13px;
-            color: #00ccff;
-            text-align: center;
-            margin-top: 4px;
-        }
-
-        .exercise-notes {
-            font-size: 10px;
-            color: rgba(255, 255, 255, 0.7);
-            text-align: center;
-            line-height: 1.3;
-            margin-top: 10px;
-            padding: 6px 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 6px;
-            max-width: 100%;
-        }
-
-        .timer {
-            font-size: 56px;
-            font-weight: 900;
-            color: #00ccff;
-            text-align: center;
-            margin: 12px 0;
-            font-variant-numeric: tabular-nums;
-            letter-spacing: -2px;
-        }
-
-        .timer-label {
-            font-size: 9px;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.5);
-            text-align: center;
-            margin-bottom: 6px;
-            letter-spacing: 1px;
-        }
-
-        .next {
-            margin-top: 12px;
-            padding: 6px 12px;
-            background: rgba(0, 204, 255, 0.15);
-            border: 1px solid rgba(0, 204, 255, 0.3);
-            border-radius: 6px;
-            text-align: center;
-        }
-
-        .next-label {
-            font-size: 8px;
-            color: #00ccff;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 3px;
-        }
-
-        .next-text {
-            font-size: 11px;
-            font-weight: 600;
-            color: #fff;
-        }
-
-        /* Bottom buttons - compact */
-        .controls {
-            flex-shrink: 0;
-            padding: 8px;
-            display: flex;
-            gap: 6px;
-            background: rgba(0, 0, 0, 0.9);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
+        /* Buttons in curved arrangement */
         .btn {
-            flex: 1;
-            padding: 12px 6px;
+            padding: 10px 14px;
             border: none;
-            border-radius: 6px;
-            font-size: 11px;
+            border-radius: 20px;
+            font-size: 10px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.3px;
             cursor: pointer;
             transition: transform 0.1s ease;
+            white-space: nowrap;
         }
 
         .btn:active {
-            transform: scale(0.95);
+            transform: scale(0.92);
         }
 
         .btn-primary {
             background: #00ff88;
             color: #000;
+            padding: 12px 20px;
         }
 
         .btn-secondary {
@@ -198,9 +102,108 @@
         }
 
         .btn-pause {
-            background: rgba(255, 193, 7, 0.2);
+            background: rgba(255, 193, 7, 0.25);
             color: #ffc107;
-            border: 1px solid rgba(255, 193, 7, 0.3);
+            border: 1px solid rgba(255, 193, 7, 0.4);
+        }
+
+        /* Main content - centered */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 35px 60px 35px;
+            overflow: hidden;
+        }
+
+        .phase {
+            font-size: 9px;
+            font-weight: 700;
+            color: #00ff88;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .exercise-name {
+            font-size: 17px;
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.2;
+            margin-bottom: 12px;
+        }
+
+        .exercise-sets {
+            font-size: 28px;
+            font-weight: 900;
+            color: #00ff88;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .exercise-weight {
+            font-size: 14px;
+            color: #00ccff;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .exercise-notes {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.75);
+            text-align: center;
+            line-height: 1.4;
+            margin-top: 12px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            max-width: 100%;
+        }
+
+        .timer {
+            font-size: 64px;
+            font-weight: 900;
+            color: #00ccff;
+            text-align: center;
+            margin: 15px 0;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -3px;
+        }
+
+        .timer-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.5);
+            text-align: center;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .next {
+            margin-top: 15px;
+            padding: 8px 14px;
+            background: rgba(0, 204, 255, 0.15);
+            border: 1px solid rgba(0, 204, 255, 0.35);
+            border-radius: 8px;
+            text-align: center;
+            max-width: 100%;
+        }
+
+        .next-label {
+            font-size: 8px;
+            color: #00ccff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .next-text {
+            font-size: 12px;
+            font-weight: 600;
+            color: #fff;
         }
 
         .completion {
@@ -209,20 +212,20 @@
         }
 
         .completion-icon {
-            font-size: 42px;
-            margin-bottom: 12px;
+            font-size: 48px;
+            margin-bottom: 15px;
         }
 
         .completion-title {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 800;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         .completion-msg {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.7);
-            line-height: 1.4;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.75);
+            line-height: 1.5;
         }
 
         .hidden {
@@ -231,20 +234,17 @@
     </style>
 </head>
 <body>
-    <div class="top-bar">
-        <div class="top-title">W1 Mon • Strength A</div>
+    <div class="top-controls">
+        <div class="top-title">W1 MON • STRENGTH A</div>
         <div class="progress-bar">
             <div class="progress-fill" id="progress"></div>
         </div>
-    </div>
-
-    <div class="content" id="content"></div>
-
-    <div class="controls">
         <button class="btn btn-secondary hidden" id="skipBtn">Skip</button>
         <button class="btn btn-pause hidden" id="pauseBtn">Pause</button>
         <button class="btn btn-primary" id="nextBtn">Start</button>
     </div>
+
+    <div class="content" id="content"></div>
 
     <script>
         var workout = {
@@ -428,7 +428,7 @@
         function togglePause() {
             paused = !paused;
             pauseBtn.textContent = paused ? 'Resume' : 'Pause';
-            pauseBtn.style.background = paused ? 'rgba(0, 255, 136, 0.2)' : 'rgba(255, 193, 7, 0.2)';
+            pauseBtn.style.background = paused ? 'rgba(0, 255, 136, 0.2)' : 'rgba(255, 193, 7, 0.25)';
         }
 
         function done() {
