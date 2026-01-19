@@ -41,7 +41,6 @@
             overflow: hidden;
         }
 
-        /* Progress ring */
         .progress-ring {
             position: absolute;
             top: 0;
@@ -49,6 +48,7 @@
             width: 100%;
             height: 100%;
             transform: rotate(-90deg);
+            pointer-events: none;
         }
 
         .progress-bg {
@@ -65,65 +65,70 @@
             transition: stroke-dashoffset 0.4s ease;
         }
 
-        /* Top button row */
-        .top-buttons {
+        .btn-left {
             position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 8px;
-            z-index: 10;
-        }
-
-        .btn {
-            padding: 14px 20px;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 70px;
+            height: 140px;
+            background: rgba(255,255,255,0.12);
             border: none;
-            border-radius: 20px;
-            font-size: 11px;
+            border-radius: 0 70px 70px 0;
+            color: #fff;
+            font-size: 10px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             cursor: pointer;
-            transition: transform 0.1s, opacity 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-left: 10px;
+            z-index: 10;
+            transition: background 0.15s;
         }
 
-        .btn:active {
-            transform: scale(0.92);
+        .btn-left:active {
+            background: rgba(255,255,255,0.25);
         }
 
-        .btn-skip {
-            background: rgba(255,255,255,0.15);
-            color: #fff;
-        }
-
-        .btn-pause {
-            background: rgba(255,193,7,0.25);
-            color: #ffc107;
-            border: 1px solid rgba(255,193,7,0.4);
-        }
-
-        .btn-pause.paused {
-            background: rgba(0,255,136,0.25);
-            color: #00ff88;
-            border-color: rgba(0,255,136,0.4);
-        }
-
-        .btn-next {
+        .btn-right {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 80px;
+            height: 160px;
             background: #00ff88;
+            border: none;
+            border-radius: 80px 0 0 80px;
             color: #000;
-            padding: 14px 28px;
+            font-size: 12px;
             font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-right: 15px;
+            z-index: 10;
+            box-shadow: -4px 0 20px rgba(0,255,136,0.3);
+            transition: background 0.15s;
+        }
+
+        .btn-right:active {
+            background: #00cc6a;
         }
 
         .hidden {
             display: none !important;
         }
 
-        /* Title */
         .title {
             position: absolute;
-            top: 70px;
+            top: 25px;
             left: 0;
             right: 0;
             text-align: center;
@@ -134,13 +139,12 @@
             letter-spacing: 1px;
         }
 
-        /* Main content */
         .content {
             position: absolute;
-            top: 90px;
-            left: 40px;
-            right: 40px;
-            bottom: 40px;
+            top: 50px;
+            left: 80px;
+            right: 90px;
+            bottom: 50px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -154,59 +158,107 @@
             color: #00ff88;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
+
+        .phase.mobility { color: #00ccff; }
+        .phase.activation { color: #ff9500; }
+        .phase.strength { color: #ff3b30; }
+        .phase.accessory { color: #af52de; }
+        .phase.finisher { color: #ff2d55; }
 
         .exercise-name {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 800;
             line-height: 1.2;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
-        .exercise-sets {
-            font-size: 40px;
+        .set-indicator {
+            font-size: 32px;
             font-weight: 900;
             color: #00ff88;
-            margin: 8px 0;
+            margin: 6px 0;
         }
 
-        .exercise-weight {
+        .rep-info {
             font-size: 16px;
-            color: #00ccff;
+            color: #fff;
             font-weight: 600;
         }
 
+        .exercise-weight {
+            font-size: 14px;
+            color: #00ccff;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
         .exercise-notes {
-            font-size: 11px;
+            font-size: 10px;
             color: rgba(255,255,255,0.7);
-            line-height: 1.4;
-            margin-top: 12px;
-            padding: 8px 12px;
+            line-height: 1.3;
+            margin-top: 10px;
+            padding: 6px 10px;
             background: rgba(255,255,255,0.08);
-            border-radius: 10px;
+            border-radius: 8px;
+        }
+
+        .timer-wrap {
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 12px;
+            transition: background 0.15s;
+        }
+
+        .timer-wrap:active {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .timer-wrap.paused {
+            background: rgba(255,193,7,0.2);
         }
 
         .timer {
-            font-size: 72px;
+            font-size: 64px;
             font-weight: 900;
             color: #00ccff;
-            margin: 8px 0;
             font-variant-numeric: tabular-nums;
             letter-spacing: -3px;
+            line-height: 1;
+        }
+
+        .timer-wrap.paused .timer {
+            color: #ffc107;
         }
 
         .timer-label {
-            font-size: 9px;
+            font-size: 8px;
             text-transform: uppercase;
             color: rgba(255,255,255,0.5);
             letter-spacing: 1px;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
+        }
+
+        .timer-wrap.paused .timer-label {
+            color: #ffc107;
+        }
+
+        .pause-hint {
+            font-size: 7px;
+            color: rgba(255,255,255,0.3);
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .timer-wrap.paused .pause-hint {
+            color: #ffc107;
         }
 
         .next-up {
-            margin-top: 12px;
-            padding: 6px 12px;
+            margin-top: 10px;
+            padding: 5px 10px;
             background: rgba(0,204,255,0.12);
             border: 1px solid rgba(0,204,255,0.3);
             border-radius: 8px;
@@ -220,47 +272,51 @@
         }
 
         .next-text {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
             margin-top: 2px;
         }
 
-        /* Start screen */
         .start-screen {
             text-align: center;
         }
 
         .start-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-        }
-
-        .start-title {
-            font-size: 22px;
-            font-weight: 800;
-            margin-bottom: 8px;
-        }
-
-        .start-subtitle {
-            font-size: 12px;
-            color: rgba(255,255,255,0.6);
-        }
-
-        /* Completion */
-        .completion-icon {
-            font-size: 48px;
+            font-size: 44px;
             margin-bottom: 12px;
         }
 
-        .completion-title {
+        .start-title {
             font-size: 20px;
             font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .start-subtitle {
+            font-size: 11px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .start-duration {
+            font-size: 10px;
             color: #00ff88;
-            margin-bottom: 8px;
+            margin-top: 6px;
+        }
+
+        .completion-icon {
+            font-size: 44px;
+            margin-bottom: 10px;
+        }
+
+        .completion-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #00ff88;
+            margin-bottom: 6px;
         }
 
         .completion-msg {
-            font-size: 11px;
+            font-size: 10px;
             color: rgba(255,255,255,0.7);
             line-height: 1.5;
         }
@@ -268,55 +324,79 @@
 </head>
 <body>
     <div class="watch">
-        <!-- Progress ring -->
         <svg class="progress-ring" viewBox="0 0 408 408">
             <circle class="progress-bg" cx="204" cy="204" r="198"/>
             <circle class="progress-fill" id="progress" cx="204" cy="204" r="198"/>
         </svg>
 
-        <!-- Top buttons -->
-        <div class="top-buttons">
-            <button class="btn btn-skip hidden" id="skipBtn">Skip</button>
-            <button class="btn btn-pause hidden" id="pauseBtn">Pause</button>
-            <button class="btn btn-next" id="nextBtn">Start</button>
-        </div>
+        <button class="btn-left hidden" id="backBtn">Back</button>
+        <button class="btn-right" id="nextBtn">Start</button>
 
-        <!-- Title -->
         <div class="title">W1 MON • STRENGTH A</div>
 
-        <!-- Content -->
         <div class="content" id="content">
             <div class="start-screen">
                 <div class="start-icon">💪</div>
                 <div class="start-title">Ready?</div>
-                <div class="start-subtitle">Tap START to begin</div>
+                <div class="start-subtitle">Squat • Push/Pull • Core</div>
+                <div class="start-duration">60 min total</div>
             </div>
         </div>
     </div>
 
     <script>
+        // Workout with individual sets expanded
         var workout = {
             warmup: [
-                { phase: "Mobility 1/5", name: "Seal → Down Dog", duration: 60, notes: "5 reps • 5s hold each" },
-                { phase: "Mobility 2/5", name: "World's Greatest", duration: 75, notes: "5 each side" },
-                { phase: "Mobility 3/5", name: "Hip 90-90", duration: 45, notes: "8 each side" },
-                { phase: "Mobility 4/5", name: "Shoulder Pass", duration: 30, notes: "10 reps wide grip" },
-                { phase: "Mobility 5/5", name: "Thoracic Rotations", duration: 30, notes: "8 each side" },
-                { phase: "Activation 1/5", name: "Machine Cals", duration: 120, notes: "Easy • HR 120-130" },
-                { phase: "Activation 2/5", name: "Goblet Hold", duration: 30, notes: "30s • Light KB" },
-                { phase: "Activation 3/5", name: "Band Pulls", duration: 30, notes: "15 reps" },
-                { phase: "Activation 4/5", name: "Glute Bridges", duration: 30, notes: "10 reps • 2s hold" },
-                { phase: "Activation 5/5", name: "Arm Circles", duration: 30, notes: "10 each way" }
+                { phase: "Mobility 1/5", phaseClass: "mobility", name: "Seal → Down Dog Flow", duration: 60, notes: "5 reps • 5s hold each pose" },
+                { phase: "Mobility 2/5", phaseClass: "mobility", name: "World's Greatest Stretch", duration: 75, notes: "5 each side • Lunge, rotate, reach" },
+                { phase: "Mobility 3/5", phaseClass: "mobility", name: "Hip 90-90 Switches", duration: 45, notes: "8 each side • Swivel knees L/R" },
+                { phase: "Mobility 4/5", phaseClass: "mobility", name: "Shoulder Pass-Throughs", duration: 30, notes: "10 reps • Wide grip, slow" },
+                { phase: "Mobility 5/5", phaseClass: "mobility", name: "Thoracic Rotations", duration: 30, notes: "8 each side • Knees stacked" },
+                { phase: "Activation 1/5", phaseClass: "activation", name: "Machine Cals", duration: 120, notes: "Row/Bike/Ski • HR 120-130" },
+                { phase: "Activation 2/5", phaseClass: "activation", name: "Goblet Squat Hold", duration: 30, notes: "Light KB • Sit in bottom" },
+                { phase: "Activation 3/5", phaseClass: "activation", name: "Band Pull-Aparts", duration: 30, notes: "15 reps • Shoulder height" },
+                { phase: "Activation 4/5", phaseClass: "activation", name: "Glute Bridges", duration: 30, notes: "10 reps • 2s hold at top" },
+                { phase: "Activation 5/5", phaseClass: "activation", name: "Arm Circles + Shrugs", duration: 30, notes: "10 each • Wake up shoulders" }
             ],
             main: [
-                { phase: "Block 1", name: "Goblet Squat", sets: "2 × 8", weight: "Light", rest: 90, notes: "Warm-up. Find depth." },
-                { phase: "Block 1", name: "Back Squat", sets: "4 × 8", weight: "60kg", rest: 180, notes: "RPE 6/10 • Pins set!" },
-                { phase: "Block 1", name: "Rest/Setup", duration: 120, notes: "2 min break. Hydrate." },
-                { phase: "Block 2", name: "RDL", sets: "3 × 10", weight: "40kg", rest: 180, notes: "SLOW! Feel hamstrings." },
-                { phase: "Block 2", name: "Inverted Row", sets: "3 × 10", weight: "BW", rest: 120, notes: "Chest to bar" },
-                { phase: "Accessory", name: "DB Press", sets: "3 × 10", weight: "12kg", rest: 120, notes: "Full range" },
-                { phase: "Accessory", name: "Plank", sets: "3 × 30s", rest: 90, notes: "Core tight!" },
-                { phase: "Finisher", name: "Farmer Walk", sets: "3 × 40m", weight: "Heavy", rest: 120, notes: "Tall posture" }
+                // BLOCK 1: Goblet Squat 2x8
+                { phase: "Block 1 • Warm-up", phaseClass: "strength", name: "Goblet Squat", set: 1, totalSets: 2, reps: 8, weight: "Light KB", rest: 90, notes: "Find depth" },
+                { phase: "Block 1 • Warm-up", phaseClass: "strength", name: "Goblet Squat", set: 2, totalSets: 2, reps: 8, weight: "Light KB", rest: 90, notes: "Find depth" },
+                
+                // BLOCK 1: Back Squat 4x8 @ 60kg
+                { phase: "Block 1 • Main", phaseClass: "strength", name: "Back Squat", set: 1, totalSets: 4, reps: 8, weight: "60kg", rest: 180, notes: "RPE 6/10 • Brace core" },
+                { phase: "Block 1 • Main", phaseClass: "strength", name: "Back Squat", set: 2, totalSets: 4, reps: 8, weight: "60kg", rest: 180, notes: "RPE 6/10 • Brace core" },
+                { phase: "Block 1 • Main", phaseClass: "strength", name: "Back Squat", set: 3, totalSets: 4, reps: 8, weight: "60kg", rest: 180, notes: "RPE 6/10 • Brace core" },
+                { phase: "Block 1 • Main", phaseClass: "strength", name: "Back Squat", set: 4, totalSets: 4, reps: 8, weight: "60kg", rest: 120, notes: "RPE 6/10 • Last set!" },
+                
+                // Rest/Setup
+                { phase: "Block 1", phaseClass: "strength", name: "Rest / Setup", duration: 120, notes: "Set up for RDLs" },
+                
+                // BLOCK 2: RDL 3x10 @ 40kg
+                { phase: "Block 2", phaseClass: "strength", name: "Romanian Deadlift", set: 1, totalSets: 3, reps: 10, weight: "40kg", rest: 180, notes: "Slow eccentric • Feel hamstrings" },
+                { phase: "Block 2", phaseClass: "strength", name: "Romanian Deadlift", set: 2, totalSets: 3, reps: 10, weight: "40kg", rest: 180, notes: "Slow eccentric • Feel hamstrings" },
+                { phase: "Block 2", phaseClass: "strength", name: "Romanian Deadlift", set: 3, totalSets: 3, reps: 10, weight: "40kg", rest: 120, notes: "Slow eccentric • Last set!" },
+                
+                // BLOCK 2: Inverted Row 3x10
+                { phase: "Block 2", phaseClass: "strength", name: "Inverted Row", set: 1, totalSets: 3, reps: 10, weight: "BW", rest: 120, notes: "Chest to bar • Feet flat" },
+                { phase: "Block 2", phaseClass: "strength", name: "Inverted Row", set: 2, totalSets: 3, reps: 10, weight: "BW", rest: 120, notes: "Chest to bar • Feet flat" },
+                { phase: "Block 2", phaseClass: "strength", name: "Inverted Row", set: 3, totalSets: 3, reps: 10, weight: "BW", rest: 120, notes: "Chest to bar • Last set!" },
+                
+                // ACCESSORY: DB Press 3x10 @ 12kg
+                { phase: "Accessory", phaseClass: "accessory", name: "DB Seated Press", set: 1, totalSets: 3, reps: 10, weight: "12kg", rest: 120, notes: "Full ROM" },
+                { phase: "Accessory", phaseClass: "accessory", name: "DB Seated Press", set: 2, totalSets: 3, reps: 10, weight: "12kg", rest: 120, notes: "Full ROM" },
+                { phase: "Accessory", phaseClass: "accessory", name: "DB Seated Press", set: 3, totalSets: 3, reps: 10, weight: "12kg", rest: 90, notes: "Full ROM • Last set!" },
+                
+                // ACCESSORY: Plank 3x30s
+                { phase: "Accessory", phaseClass: "accessory", name: "Plank Hold", set: 1, totalSets: 3, duration: 30, rest: 90, notes: "Core tight • Breathe" },
+                { phase: "Accessory", phaseClass: "accessory", name: "Plank Hold", set: 2, totalSets: 3, duration: 30, rest: 90, notes: "Core tight • Breathe" },
+                { phase: "Accessory", phaseClass: "accessory", name: "Plank Hold", set: 3, totalSets: 3, duration: 30, rest: 90, notes: "Core tight • Last set!" },
+                
+                // FINISHER: Farmer's Walk 3x40m
+                { phase: "Finisher", phaseClass: "finisher", name: "Farmer's Walk", set: 1, totalSets: 3, reps: "40m", weight: "Heavy KB", rest: 120, notes: "Tall posture • Grip hard" },
+                { phase: "Finisher", phaseClass: "finisher", name: "Farmer's Walk", set: 2, totalSets: 3, reps: "40m", weight: "Heavy KB", rest: 120, notes: "Tall posture • Grip hard" },
+                { phase: "Finisher", phaseClass: "finisher", name: "Farmer's Walk", set: 3, totalSets: 3, reps: "40m", weight: "Heavy KB", rest: 0, notes: "Tall posture • DONE!" }
             ]
         };
 
@@ -328,8 +408,7 @@
         var resting = false;
 
         var nextBtn = document.getElementById('nextBtn');
-        var pauseBtn = document.getElementById('pauseBtn');
-        var skipBtn = document.getElementById('skipBtn');
+        var backBtn = document.getElementById('backBtn');
         var content = document.getElementById('content');
         var progressEl = document.getElementById('progress');
 
@@ -367,39 +446,68 @@
             return m + ':' + (sec < 10 ? '0' : '') + sec;
         }
 
+        function togglePause() {
+            paused = !paused;
+            var wrap = document.getElementById('timerWrap');
+            if (wrap) {
+                wrap.classList.toggle('paused', paused);
+                var hint = wrap.querySelector('.pause-hint');
+                if (hint) hint.textContent = paused ? 'Tap to resume' : 'Tap to pause';
+            }
+        }
+
         function render() {
             var ex = getEx();
             var nxt = getNextEx();
-            var html = '<div class="phase">' + ex.phase + '</div>';
+            var phaseClass = ex.phaseClass || '';
+            var html = '<div class="phase ' + phaseClass + '">' + ex.phase + '</div>';
             html += '<div class="exercise-name">' + ex.name + '</div>';
 
             if (ex.duration) {
+                // Timed exercise (warmup or plank)
+                if (ex.set) {
+                    html += '<div class="set-indicator">Set ' + ex.set + '/' + ex.totalSets + '</div>';
+                }
+                html += '<div class="timer-wrap" id="timerWrap">';
                 html += '<div class="timer-label">Duration</div>';
                 html += '<div class="timer" id="timer">' + fmt(ex.duration) + '</div>';
-            } else {
-                html += '<div class="exercise-sets">' + ex.sets + '</div>';
+                html += '<div class="pause-hint">Tap to pause</div>';
+                html += '</div>';
+            } else if (ex.set) {
+                // Set-based exercise
+                html += '<div class="set-indicator">Set ' + ex.set + '/' + ex.totalSets + '</div>';
+                html += '<div class="rep-info">' + ex.reps + ' reps</div>';
                 if (ex.weight) html += '<div class="exercise-weight">💪 ' + ex.weight + '</div>';
             }
 
             if (ex.notes) html += '<div class="exercise-notes">' + ex.notes + '</div>';
 
             if (nxt) {
+                var nextText = nxt.name;
+                if (nxt.set) nextText += ' (Set ' + nxt.set + ')';
                 html += '<div class="next-up"><div class="next-label">Next</div>';
-                html += '<div class="next-text">' + nxt.name + '</div></div>';
+                html += '<div class="next-text">' + nextText + '</div></div>';
             }
 
             content.innerHTML = html;
             updateProgress();
 
+            var timerWrap = document.getElementById('timerWrap');
+            if (timerWrap) {
+                timerWrap.onclick = togglePause;
+            }
+
             if (ex.duration) {
                 startTimer(ex.duration);
                 nextBtn.textContent = 'Next';
-                pauseBtn.classList.remove('hidden');
-                skipBtn.classList.remove('hidden');
             } else {
                 nextBtn.textContent = 'Done';
-                pauseBtn.classList.add('hidden');
-                skipBtn.classList.add('hidden');
+            }
+
+            if (section === 'warmup' && idx === 0) {
+                backBtn.classList.add('hidden');
+            } else {
+                backBtn.classList.remove('hidden');
             }
         }
 
@@ -407,21 +515,30 @@
             resting = true;
             var html = '<div class="phase">Rest</div>';
             html += '<div class="exercise-name">Recover</div>';
+            html += '<div class="timer-wrap" id="timerWrap">';
             html += '<div class="timer-label">Time Left</div>';
             html += '<div class="timer" id="timer">' + fmt(dur) + '</div>';
+            html += '<div class="pause-hint">Tap to pause</div>';
+            html += '</div>';
             if (nextExName) {
                 html += '<div class="next-up"><div class="next-label">Up Next</div>';
                 html += '<div class="next-text">' + nextExName + '</div></div>';
             }
             content.innerHTML = html;
+
+            var timerWrap = document.getElementById('timerWrap');
+            if (timerWrap) {
+                timerWrap.onclick = togglePause;
+            }
+
             startTimer(dur);
             nextBtn.textContent = 'Skip';
-            pauseBtn.classList.remove('hidden');
-            skipBtn.classList.add('hidden');
+            backBtn.classList.remove('hidden');
         }
 
         function startTimer(dur) {
             timeLeft = dur;
+            paused = false;
             if (tmr) clearInterval(tmr);
             tmr = setInterval(function() {
                 if (!paused) {
@@ -440,15 +557,15 @@
 
         function onTimerEnd() {
             if (resting) {
-                // Rest finished - move to next exercise
                 resting = false;
                 moveToNextExercise();
             } else {
-                // Timed exercise finished - check if rest needed or move on
                 var ex = getEx();
-                if (section === 'main' && ex.rest) {
+                if (section === 'main' && ex.rest && ex.rest > 0) {
                     var nxt = getNextEx();
-                    renderRest(ex.rest, nxt ? nxt.name : null);
+                    var nextText = nxt ? nxt.name : null;
+                    if (nxt && nxt.set) nextText += ' (Set ' + nxt.set + ')';
+                    renderRest(ex.rest, nextText);
                 } else {
                     moveToNextExercise();
                 }
@@ -478,20 +595,19 @@
                 clearInterval(tmr);
                 tmr = null;
             }
+            paused = false;
 
             if (resting) {
-                // Skip rest - go to next exercise
                 resting = false;
                 moveToNextExercise();
             } else {
-                // Done with current exercise
                 var ex = getEx();
-                if (section === 'main' && ex.rest) {
-                    // Show rest period
+                if (section === 'main' && ex.rest && ex.rest > 0) {
                     var nxt = getNextEx();
-                    renderRest(ex.rest, nxt ? nxt.name : null);
+                    var nextText = nxt ? nxt.name : null;
+                    if (nxt && nxt.set) nextText += ' (Set ' + nxt.set + ')';
+                    renderRest(ex.rest, nextText);
                 } else {
-                    // No rest, move to next
                     moveToNextExercise();
                 }
             }
@@ -501,10 +617,9 @@
             resting = false;
             content.innerHTML = '<div class="completion-icon">🇧🇬💪</div>' +
                 '<div class="completion-title">W1 Mon Done!</div>' +
-                '<div class="completion-msg">HR under 165.<br>Walk home = cool-down.<br><br>Bulgaria is lucky to have you.</div>';
+                '<div class="completion-msg">Walk home = cool down<br><br>Great work today!</div>';
             nextBtn.textContent = 'Restart';
-            pauseBtn.classList.add('hidden');
-            skipBtn.classList.add('hidden');
+            backBtn.classList.add('hidden');
             progressEl.style.strokeDashoffset = 0;
         }
 
@@ -519,27 +634,29 @@
             }
         };
 
-        pauseBtn.onclick = function() {
-            paused = !paused;
-            pauseBtn.textContent = paused ? 'Resume' : 'Pause';
-            pauseBtn.classList.toggle('paused', paused);
-        };
-
-        skipBtn.onclick = function() {
+        backBtn.onclick = function() {
             if (tmr) {
                 clearInterval(tmr);
                 tmr = null;
             }
-            if (resting) {
-                resting = false;
-                moveToNextExercise();
+            paused = false;
+            resting = false;
+
+            if (section === 'main') {
+                if (idx > 0) {
+                    idx--;
+                } else {
+                    section = 'warmup';
+                    idx = workout.warmup.length - 1;
+                }
             } else {
-                // Skip timed exercise - treat as done
-                onNextClick();
+                if (idx > 0) {
+                    idx--;
+                }
             }
+            render();
         };
 
-        // Prevent zoom
         document.addEventListener('touchstart', function(e) {
             if (e.touches.length > 1) e.preventDefault();
         }, { passive: false });
