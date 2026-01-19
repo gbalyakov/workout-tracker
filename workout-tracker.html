@@ -2,216 +2,199 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Comeback Training - Jan 19</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>W1 Mon</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        html {
+            touch-action: pan-y;
+            -webkit-text-size-adjust: 100%;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
-            color: #ffffff;
-            min-height: 100vh;
+            background: #000;
+            color: #fff;
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            touch-action: manipulation;
-            overflow-x: hidden;
+            touch-action: none;
         }
 
-        .header {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            padding: 12px 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+        /* Top bar - compact */
+        .top-bar {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 6px 0;
+            text-align: center;
+            border-bottom: 1px solid #00ff88;
+            flex-shrink: 0;
         }
 
-        .header-title {
-            font-size: 14px;
+        .top-title {
+            font-size: 10px;
             font-weight: 700;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
             color: #00ff88;
-        }
-
-        .header-subtitle {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.6);
-            margin-top: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .progress-bar {
-            height: 3px;
-            background: rgba(255, 255, 255, 0.1);
-            margin-top: 8px;
-            border-radius: 2px;
-            overflow: hidden;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 4px 20px 0 20px;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #00ff88, #00ccff);
+            background: #00ff88;
             transition: width 0.3s ease;
-            border-radius: 2px;
         }
 
-        .container {
+        /* Main content - centered vertically */
+        .content {
             flex: 1;
-            padding: 16px;
-            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 30px;
+            overflow: hidden;
         }
 
-        .phase-indicator {
-            display: inline-block;
-            padding: 4px 10px;
-            background: rgba(0, 255, 136, 0.15);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 600;
+        .phase {
+            font-size: 8px;
+            font-weight: 700;
+            color: #00ff88;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: #00ff88;
-            margin-bottom: 16px;
-        }
-
-        .exercise-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            margin-bottom: 8px;
+            text-align: center;
         }
 
         .exercise-name {
-            font-size: 18px;
+            font-size: 15px;
             font-weight: 700;
-            margin-bottom: 8px;
-            line-height: 1.3;
+            text-align: center;
+            line-height: 1.2;
+            margin-bottom: 10px;
+            max-width: 100%;
         }
 
-        .exercise-details {
-            font-size: 28px;
-            font-weight: 800;
+        .exercise-sets {
+            font-size: 22px;
+            font-weight: 900;
             color: #00ff88;
-            margin: 12px 0;
-            letter-spacing: -0.5px;
+            text-align: center;
+            margin: 8px 0;
+        }
+
+        .exercise-weight {
+            font-size: 13px;
+            color: #00ccff;
+            text-align: center;
+            margin-top: 4px;
         }
 
         .exercise-notes {
-            font-size: 13px;
+            font-size: 10px;
             color: rgba(255, 255, 255, 0.7);
-            line-height: 1.5;
-            margin-top: 8px;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            border-left: 3px solid #00ff88;
+            text-align: center;
+            line-height: 1.3;
+            margin-top: 10px;
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            max-width: 100%;
         }
 
-        .timer-display {
-            font-size: 52px;
+        .timer {
+            font-size: 56px;
             font-weight: 900;
-            text-align: center;
-            margin: 20px 0;
             color: #00ccff;
+            text-align: center;
+            margin: 12px 0;
             font-variant-numeric: tabular-nums;
             letter-spacing: -2px;
         }
 
         .timer-label {
-            text-align: center;
-            font-size: 12px;
+            font-size: 9px;
             text-transform: uppercase;
-            letter-spacing: 1px;
             color: rgba(255, 255, 255, 0.5);
-            margin-bottom: 16px;
-        }
-
-        .next-up {
-            background: rgba(0, 204, 255, 0.1);
-            border: 1px solid rgba(0, 204, 255, 0.3);
-            border-radius: 12px;
-            padding: 12px;
-            margin-top: 16px;
-        }
-
-        .next-up-label {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: rgba(0, 204, 255, 0.8);
+            text-align: center;
             margin-bottom: 6px;
+            letter-spacing: 1px;
         }
 
-        .next-up-text {
-            font-size: 14px;
+        .next {
+            margin-top: 12px;
+            padding: 6px 12px;
+            background: rgba(0, 204, 255, 0.15);
+            border: 1px solid rgba(0, 204, 255, 0.3);
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .next-label {
+            font-size: 8px;
+            color: #00ccff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+        }
+
+        .next-text {
+            font-size: 11px;
             font-weight: 600;
-            color: #ffffff;
+            color: #fff;
         }
 
+        /* Bottom buttons - compact */
         .controls {
-            position: sticky;
-            bottom: 0;
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 12px 16px;
+            flex-shrink: 0;
+            padding: 8px;
             display: flex;
-            gap: 12px;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.9);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .btn {
             flex: 1;
-            padding: 16px;
+            padding: 12px 6px;
             border: none;
-            border-radius: 12px;
-            font-size: 15px;
+            border-radius: 6px;
+            font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            touch-action: manipulation;
+            transition: transform 0.1s ease;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #00ff88, #00ccff);
-            color: #000000;
-        }
-
-        .btn-primary:active {
+        .btn:active {
             transform: scale(0.95);
         }
 
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .btn-primary {
+            background: #00ff88;
+            color: #000;
         }
 
-        .btn-secondary:active {
+        .btn-secondary {
             background: rgba(255, 255, 255, 0.15);
+            color: #fff;
         }
 
         .btn-pause {
@@ -220,68 +203,26 @@
             border: 1px solid rgba(255, 193, 7, 0.3);
         }
 
-        .hr-monitor {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 10px 16px;
-            background: rgba(255, 0, 68, 0.15);
-            border: 1px solid rgba(255, 0, 68, 0.3);
-            border-radius: 20px;
-            margin-bottom: 16px;
-        }
-
-        .hr-value {
-            font-size: 24px;
-            font-weight: 800;
-            color: #ff0044;
-        }
-
-        .hr-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .hr-warning {
-            background: rgba(255, 152, 0, 0.2);
-            border-color: rgba(255, 152, 0, 0.4);
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        .completion-screen {
+        .completion {
             text-align: center;
-            padding: 40px 20px;
+            padding: 20px;
         }
 
         .completion-icon {
-            font-size: 64px;
-            margin-bottom: 20px;
-            animation: bounce 0.6s ease;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        .completion-title {
-            font-size: 24px;
-            font-weight: 800;
+            font-size: 42px;
             margin-bottom: 12px;
         }
 
-        .completion-message {
-            font-size: 14px;
+        .completion-title {
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .completion-msg {
+            font-size: 11px;
             color: rgba(255, 255, 255, 0.7);
-            line-height: 1.6;
+            line-height: 1.4;
         }
 
         .hidden {
@@ -290,388 +231,259 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="header-title">Week 1 - Monday</div>
-        <div class="header-subtitle">Strength A • Jan 19, 2026</div>
+    <div class="top-bar">
+        <div class="top-title">W1 Mon • Strength A</div>
         <div class="progress-bar">
-            <div class="progress-fill" id="progressFill"></div>
+            <div class="progress-fill" id="progress"></div>
         </div>
     </div>
 
-    <div class="container" id="workoutContainer">
-        <!-- Content will be dynamically inserted here -->
-    </div>
+    <div class="content" id="content"></div>
 
     <div class="controls">
         <button class="btn btn-secondary hidden" id="skipBtn">Skip</button>
         <button class="btn btn-pause hidden" id="pauseBtn">Pause</button>
-        <button class="btn btn-primary" id="nextBtn">Start Workout</button>
+        <button class="btn btn-primary" id="nextBtn">Start</button>
     </div>
 
     <script>
         var workout = {
             warmup: [
-                {
-                    phase: "Warm-Up • Mobility (0:00-4:00)",
-                    name: "Seal Stretch → Down Dog Flow",
-                    duration: 60,
-                    notes: "5 reps • 5 sec hold each pose"
-                },
-                {
-                    phase: "Warm-Up • Mobility",
-                    name: "World's Greatest Stretch",
-                    duration: 75,
-                    notes: "5 each side • Lunge, rotate, reach"
-                },
-                {
-                    phase: "Warm-Up • Mobility",
-                    name: "Hip 90-90 Switches",
-                    duration: 45,
-                    notes: "8 each side • Sit on floor, swivel knees L/R"
-                },
-                {
-                    phase: "Warm-Up • Mobility",
-                    name: "Shoulder Pass-Throughs",
-                    duration: 30,
-                    notes: "10 reps • PVC/Band, wide grip, slow"
-                },
-                {
-                    phase: "Warm-Up • Mobility",
-                    name: "Thoracic Rotations (lying)",
-                    duration: 30,
-                    notes: "8 each side • Knees stacked, rotate upper"
-                },
-                {
-                    phase: "Warm-Up • Activation (4:00-8:00)",
-                    name: "Machine Cals (easy pace)",
-                    duration: 120,
-                    notes: "2 min • Row/Bike/Ski - HR 120-130"
-                },
-                {
-                    phase: "Warm-Up • Activation",
-                    name: "Goblet Squat Hold",
-                    duration: 30,
-                    notes: "30 sec • Light KB, sit in bottom"
-                },
-                {
-                    phase: "Warm-Up • Activation",
-                    name: "Band Pull-Aparts",
-                    duration: 30,
-                    notes: "15 reps • Shoulder height"
-                },
-                {
-                    phase: "Warm-Up • Activation",
-                    name: "Glute Bridges",
-                    duration: 30,
-                    notes: "10 reps • 2 sec hold at top"
-                },
-                {
-                    phase: "Warm-Up • Activation",
-                    name: "Arm Circles + Shoulder Shrugs",
-                    duration: 30,
-                    notes: "10 each • Wake up shoulders"
-                }
+                { phase: "Mobility 1/5", name: "Seal → Down Dog", duration: 60, notes: "5 reps • 5s hold each" },
+                { phase: "Mobility 2/5", name: "World's Greatest", duration: 75, notes: "5 each side" },
+                { phase: "Mobility 3/5", name: "Hip 90-90", duration: 45, notes: "8 each side" },
+                { phase: "Mobility 4/5", name: "Shoulder Pass", duration: 30, notes: "10 reps wide grip" },
+                { phase: "Mobility 5/5", name: "Thoracic Rotations", duration: 30, notes: "8 each side" },
+                { phase: "Activation 1/5", name: "Machine Cals", duration: 120, notes: "Easy • HR 120-130" },
+                { phase: "Activation 2/5", name: "Goblet Hold", duration: 30, notes: "30s • Light KB" },
+                { phase: "Activation 3/5", name: "Band Pulls", duration: 30, notes: "15 reps" },
+                { phase: "Activation 4/5", name: "Glute Bridges", duration: 30, notes: "10 reps • 2s hold" },
+                { phase: "Activation 5/5", name: "Arm Circles", duration: 30, notes: "10 each way" }
             ],
             main: [
-                {
-                    phase: "Strength Block 1 (8:00-28:00)",
-                    name: "Goblet Squat (warm-up sets)",
-                    sets: "2 × 8 reps",
-                    weight: "Light KB",
-                    rest: 90,
-                    notes: "Find depth. Prep for back squats."
-                },
-                {
-                    phase: "Strength Block 1",
-                    name: "Back Squat",
-                    sets: "4 × 8 reps",
-                    weight: "60kg",
-                    rest: 180,
-                    notes: "Every 3 min. RPE 6/10. Safety pins set!"
-                },
-                {
-                    phase: "Strength Block 1",
-                    name: "Rest/Setup",
-                    duration: 120,
-                    notes: "2 min break. Set up for RDLs. Hydrate."
-                },
-                {
-                    phase: "Strength Block 2 (25:00-40:00)",
-                    name: "Romanian Deadlift",
-                    sets: "3 × 10 reps",
-                    weight: "40kg",
-                    rest: 180,
-                    notes: "Every 3 min. SLOW DOWN! Hip hinge, feel hamstrings."
-                },
-                {
-                    phase: "Strength Block 2",
-                    name: "Inverted Row",
-                    sets: "3 × 10 reps",
-                    weight: "Bodyweight",
-                    rest: 120,
-                    notes: "Every 2 min. Feet flat. Chest to bar."
-                },
-                {
-                    phase: "Accessory (40:00-52:00)",
-                    name: "DB Seated Press",
-                    sets: "3 × 10 reps",
-                    weight: "12kg each",
-                    rest: 120,
-                    notes: "Every 2 min. Full range, control down."
-                },
-                {
-                    phase: "Accessory",
-                    name: "Plank Hold",
-                    sets: "3 × 30 sec",
-                    rest: 90,
-                    notes: "Every 90 sec. Core tight, don't sag!"
-                },
-                {
-                    phase: "Finisher (52:00-58:00)",
-                    name: "Farmer's Walk",
-                    sets: "3 × 40m",
-                    weight: "Heavy KB each hand",
-                    rest: 120,
-                    notes: "Tall posture. Squeeze handles tight. Big strides."
-                }
+                { phase: "Block 1", name: "Goblet Squat", sets: "2 × 8", weight: "Light", rest: 90, notes: "Warm-up. Find depth." },
+                { phase: "Block 1", name: "Back Squat", sets: "4 × 8", weight: "60kg", rest: 180, notes: "RPE 6/10 • Pins set!" },
+                { phase: "Block 1", name: "Rest/Setup", duration: 120, notes: "2 min break. Hydrate." },
+                { phase: "Block 2", name: "RDL", sets: "3 × 10", weight: "40kg", rest: 180, notes: "SLOW! Feel hamstrings." },
+                { phase: "Block 2", name: "Inverted Row", sets: "3 × 10", weight: "BW", rest: 120, notes: "Chest to bar" },
+                { phase: "Accessory", name: "DB Press", sets: "3 × 10", weight: "12kg", rest: 120, notes: "Full range" },
+                { phase: "Accessory", name: "Plank", sets: "3 × 30s", rest: 90, notes: "Core tight!" },
+                { phase: "Finisher", name: "Farmer Walk", sets: "3 × 40m", weight: "Heavy", rest: 120, notes: "Tall posture" }
             ]
         };
 
-        var currentSection = 'warmup'; // 'warmup' or 'main'
-        var currentIndex = 0;
-        var timerInterval = null;
-        var timeRemaining = 0;
-        var isPaused = false;
-        var isResting = false;
+        var section = 'warmup';
+        var index = 0;
+        var timer = null;
+        var timeLeft = 0;
+        var paused = false;
+        var resting = false;
 
         var nextBtn = document.getElementById('nextBtn');
         var pauseBtn = document.getElementById('pauseBtn');
         var skipBtn = document.getElementById('skipBtn');
-        var workoutContainer = document.getElementById('workoutContainer');
-        var progressFill = document.getElementById('progressFill');
+        var content = document.getElementById('content');
+        var progress = document.getElementById('progress');
 
-        function getTotalExercises() {
+        function total() {
             return workout.warmup.length + workout.main.length;
         }
 
-        function getCurrentExerciseNumber() {
-            if (currentSection === 'warmup') {
-                return currentIndex + 1;
-            }
-            return workout.warmup.length + currentIndex + 1;
+        function current() {
+            return section === 'warmup' ? index : workout.warmup.length + index;
         }
 
         function updateProgress() {
-            var total = getTotalExercises();
-            var current = getCurrentExerciseNumber() - 1;
-            var percentage = (current / total) * 100;
-            progressFill.style.width = percentage + '%';
+            var pct = (current() / total()) * 100;
+            progress.style.width = pct + '%';
         }
 
-        function getCurrentExercise() {
-            if (currentSection === 'warmup') {
-                return workout.warmup[currentIndex];
-            }
-            return workout.main[currentIndex];
+        function getEx() {
+            return section === 'warmup' ? workout.warmup[index] : workout.main[index];
         }
 
-        function getNextExercise() {
-            if (currentSection === 'warmup') {
-                if (currentIndex + 1 < workout.warmup.length) {
-                    return workout.warmup[currentIndex + 1];
-                }
-                return workout.main[0];
-            }
-            if (currentIndex + 1 < workout.main.length) {
-                return workout.main[currentIndex + 1];
-            }
+        function getNext() {
+            if (section === 'warmup' && index + 1 < workout.warmup.length) return workout.warmup[index + 1];
+            if (section === 'warmup') return workout.main[0];
+            if (index + 1 < workout.main.length) return workout.main[index + 1];
             return null;
         }
 
-        function displayExercise() {
-            var exercise = getCurrentExercise();
-            var nextExercise = getNextExercise();
-            
-            var content = '<div class="phase-indicator">' + exercise.phase + '</div>' +
-                '<div class="exercise-card">' +
-                '<div class="exercise-name">' + exercise.name + '</div>';
+        function show() {
+            var ex = getEx();
+            var next = getNext();
+            var html = '<div class="phase">' + ex.phase + '</div>' +
+                '<div class="exercise-name">' + ex.name + '</div>';
 
-            // Handle timed exercises (warm-up or rest periods)
-            if (exercise.duration) {
-                content += '<div class="timer-label">Duration</div>' +
-                    '<div class="timer-display" id="timerDisplay">' + formatTime(exercise.duration) + '</div>';
-            } 
-            // Handle set-based exercises (main workout)
-            else {
-                content += '<div class="exercise-details">' + (exercise.sets || exercise.details) + '</div>';
-                if (exercise.weight) {
-                    content += '<div style="font-size: 16px; color: #00ccff; margin-top: 8px;">💪 ' + exercise.weight + '</div>';
-                }
+            if (ex.duration) {
+                html += '<div class="timer-label">Duration</div>' +
+                    '<div class="timer" id="timer">' + fmt(ex.duration) + '</div>';
+            } else {
+                html += '<div class="exercise-sets">' + ex.sets + '</div>';
+                if (ex.weight) html += '<div class="exercise-weight">💪 ' + ex.weight + '</div>';
             }
 
-            if (exercise.notes) {
-                content += '<div class="exercise-notes">' + exercise.notes + '</div>';
+            if (ex.notes) html += '<div class="exercise-notes">' + ex.notes + '</div>';
+
+            if (next) {
+                html += '<div class="next"><div class="next-label">Next</div>' +
+                    '<div class="next-text">' + next.name + '</div></div>';
             }
 
-            content += '</div>';
-
-            if (nextExercise) {
-                content += '<div class="next-up">' +
-                    '<div class="next-up-label">Next Up</div>' +
-                    '<div class="next-up-text">' + nextExercise.name + '</div>' +
-                    '</div>';
-            }
-
-            workoutContainer.innerHTML = content;
+            content.innerHTML = html;
             updateProgress();
 
-            // Start timer for timed exercises (warm-up and timed main exercises)
-            if (exercise.duration) {
-                startTimer(exercise.duration);
+            if (ex.duration) {
+                startTimer(ex.duration);
                 nextBtn.textContent = 'Next';
                 pauseBtn.classList.remove('hidden');
                 skipBtn.classList.remove('hidden');
-            } 
-            // For set-based exercises, manual progression
-            else if (!isResting) {
+            } else if (!resting) {
                 nextBtn.textContent = 'Done';
                 pauseBtn.classList.add('hidden');
                 skipBtn.classList.add('hidden');
             }
         }
 
-        function startRestTimer(duration) {
-            isResting = true;
-            var restContent = '<div class="phase-indicator">Rest Period</div>' +
-                '<div class="exercise-card">' +
+        function showRest(dur) {
+            resting = true;
+            content.innerHTML = '<div class="phase">Rest Period</div>' +
                 '<div class="exercise-name">Recover</div>' +
-                '<div class="timer-label">Time Remaining</div>' +
-                '<div class="timer-display" id="timerDisplay">' + formatTime(duration) + '</div>' +
-                '<div class="exercise-notes">Take a breather. Get ready for the next set.</div>' +
-                '</div>';
-            workoutContainer.innerHTML = restContent;
-            
-            startTimer(duration);
-            nextBtn.textContent = 'Skip Rest';
+                '<div class="timer-label">Time Left</div>' +
+                '<div class="timer" id="timer">' + fmt(dur) + '</div>' +
+                '<div class="exercise-notes">Get ready</div>';
+            startTimer(dur);
+            nextBtn.textContent = 'Skip';
             pauseBtn.classList.remove('hidden');
             skipBtn.classList.add('hidden');
         }
 
-        function formatTime(seconds) {
-            var mins = Math.floor(seconds / 60);
-            var secs = seconds % 60;
-            return mins + ':' + (secs < 10 ? '0' : '') + secs;
+        function fmt(s) {
+            var m = Math.floor(s / 60);
+            var sec = s % 60;
+            return m + ':' + (sec < 10 ? '0' : '') + sec;
         }
 
-        function startTimer(duration) {
-            timeRemaining = duration;
-            updateTimerDisplay();
-            
-            if (timerInterval) clearInterval(timerInterval);
-            
-            timerInterval = setInterval(() => {
-                if (!isPaused) {
-                    timeRemaining--;
-                    updateTimerDisplay();
-                    
-                    if (timeRemaining <= 0) {
-                        clearInterval(timerInterval);
-                        playBeep();
-                        if (isResting) {
-                            isResting = false;
-                            displayExercise();
+        function startTimer(dur) {
+            timeLeft = dur;
+            updateTimer();
+            if (timer) clearInterval(timer);
+            timer = setInterval(function() {
+                if (!paused) {
+                    timeLeft--;
+                    updateTimer();
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        beep();
+                        if (resting) {
+                            resting = false;
+                            show();
                         } else {
-                            handleNext();
+                            next();
                         }
                     }
                 }
             }, 1000);
         }
 
-        function updateTimerDisplay() {
-            var display = document.getElementById('timerDisplay');
-            if (display) {
-                display.textContent = formatTime(timeRemaining);
-            }
+        function updateTimer() {
+            var t = document.getElementById('timer');
+            if (t) t.textContent = fmt(timeLeft);
         }
 
-        function playBeep() {
-            // Vibration for watch
-            if (navigator.vibrate) {
-                navigator.vibrate([200, 100, 200]);
-            }
+        function beep() {
+            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
         }
 
-        function handleNext() {
-            if (isResting) {
-                clearInterval(timerInterval);
-                isResting = false;
-                displayExercise();
+        function next() {
+            if (resting) {
+                clearInterval(timer);
+                resting = false;
+                show();
                 return;
             }
 
-            if (currentSection === 'warmup') {
-                currentIndex++;
-                if (currentIndex >= workout.warmup.length) {
-                    currentSection = 'main';
-                    currentIndex = 0;
+            if (section === 'warmup') {
+                index++;
+                if (index >= workout.warmup.length) {
+                    section = 'main';
+                    index = 0;
                 }
-                displayExercise();
+                show();
             } else {
-                var exercise = getCurrentExercise();
-                if (exercise.rest) {
-                    startRestTimer(exercise.rest);
+                var ex = getEx();
+                if (ex.rest) {
+                    showRest(ex.rest);
                 } else {
-                    currentIndex++;
-                    if (currentIndex >= workout.main.length) {
-                        showCompletion();
+                    index++;
+                    if (index >= workout.main.length) {
+                        done();
                     } else {
-                        displayExercise();
+                        show();
                     }
                 }
             }
         }
 
-        function handlePause() {
-            isPaused = !isPaused;
-            pauseBtn.textContent = isPaused ? 'Resume' : 'Pause';
-            pauseBtn.style.background = isPaused ? 'rgba(0, 255, 136, 0.2)' : 'rgba(255, 193, 7, 0.2)';
+        function togglePause() {
+            paused = !paused;
+            pauseBtn.textContent = paused ? 'Resume' : 'Pause';
+            pauseBtn.style.background = paused ? 'rgba(0, 255, 136, 0.2)' : 'rgba(255, 193, 7, 0.2)';
         }
 
-        function showCompletion() {
-            workoutContainer.innerHTML = '<div class="completion-screen">' +
-                '<div class="completion-icon">🇧🇬 💪</div>' +
-                '<div class="completion-title">Week 1 Monday Complete!</div>' +
-                '<div class="completion-message">' +
-                'Solid work today. Remember: HR under 165 for Week 1-2.<br><br>' +
-                'The walk home is your cool-down. Embrace it.<br><br>' +
-                'Bulgaria is lucky to have you.' +
-                '</div>' +
+        function done() {
+            content.innerHTML = '<div class="completion">' +
+                '<div class="completion-icon">🇧🇬💪</div>' +
+                '<div class="completion-title">W1 Mon Done!</div>' +
+                '<div class="completion-msg">HR under 165.<br>Walk home = cool-down.<br><br>Bulgaria is lucky to have you.</div>' +
                 '</div>';
             nextBtn.textContent = 'Finish';
             pauseBtn.classList.add('hidden');
             skipBtn.classList.add('hidden');
-            progressFill.style.width = '100%';
+            progress.style.width = '100%';
         }
 
-        nextBtn.addEventListener('click', () => {
-            if (nextBtn.textContent === 'Start Workout') {
-                displayExercise();
+        nextBtn.addEventListener('click', function() {
+            if (nextBtn.textContent === 'Start') {
+                show();
             } else if (nextBtn.textContent === 'Finish') {
-                location.reload();
+                if (confirm('Restart workout?')) location.reload();
             } else {
-                handleNext();
+                next();
             }
         });
 
-        pauseBtn.addEventListener('click', handlePause);
-        
-        skipBtn.addEventListener('click', () => {
-            clearInterval(timerInterval);
-            handleNext();
+        pauseBtn.addEventListener('click', togglePause);
+        skipBtn.addEventListener('click', function() {
+            clearInterval(timer);
+            next();
         });
 
-        // Initialize
+        // Prevent zoom
+        document.addEventListener('gesturestart', function(e) { e.preventDefault(); });
+        document.addEventListener('gesturechange', function(e) { e.preventDefault(); });
+        document.addEventListener('gestureend', function(e) { e.preventDefault(); });
+        
+        var lastTouch = 0;
+        document.addEventListener('touchend', function(e) {
+            var now = Date.now();
+            if (now - lastTouch <= 300) e.preventDefault();
+            lastTouch = now;
+        }, false);
+        
+        document.addEventListener('touchmove', function(e) {
+            if (e.touches.length > 1) e.preventDefault();
+        }, { passive: false });
+
+        // Prevent reload
+        window.addEventListener('beforeunload', function(e) {
+            if (section !== 'warmup' || index > 0) {
+                e.preventDefault();
+                e.returnValue = '';
+                return '';
+            }
+        });
+
         updateProgress();
     </script>
 </body>
