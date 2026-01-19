@@ -406,6 +406,7 @@
         var timeLeft = 0;
         var paused = false;
         var resting = false;
+        var started = false;
 
         var nextBtn = document.getElementById('nextBtn');
         var backBtn = document.getElementById('backBtn');
@@ -415,6 +416,47 @@
         var circumference = 2 * Math.PI * 198;
         progressEl.style.strokeDasharray = circumference;
         progressEl.style.strokeDashoffset = circumference;
+
+        var STORAGE_KEY = 'w1mon_state';
+
+        // Save state to localStorage
+        function saveState() {
+            if (!started) return;
+            var state = {
+                section: section,
+                idx: idx,
+                timeLeft: timeLeft,
+                paused: paused,
+                resting: resting,
+                started: started,
+                savedAt: Date.now()
+            };
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            } catch(e) {}
+        }
+
+        // Load state from localStorage
+        function loadState() {
+            try {
+                var saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    var state = JSON.parse(saved);
+                    // Only restore if saved within last 4 hours
+                    if (state.savedAt && (Date.now() - state.savedAt) < 4 * 60 * 60 * 1000) {
+                        return state;
+                    }
+                }
+            } catch(e) {}
+            return null;
+        }
+
+        // Clear saved state
+        function clearState() {
+            try {
+                localStorage.removeItem(STORAGE_KEY);
+            } catch(e) {}
+        }
 
         function totalEx() {
             return workout.warmup.length + workout.main.length;
@@ -454,27 +496,29 @@
                 var hint = wrap.querySelector('.pause-hint');
                 if (hint) hint.textContent = paused ? 'Tap to resume' : 'Tap to pause';
             }
+            saveState();
         }
 
-        function render() {
+        function render(resumeTime) {
+            started = true;
             var ex = getEx();
             var nxt = getNextEx();
             var phaseClass = ex.phaseClass || '';
             var html = '<div class="phase ' + phaseClass + '">' + ex.phase + '</div>';
             html += '<div class="exercise-name">' + ex.name + '</div>';
 
+            var displayTime = resumeTime || ex.duration;
+
             if (ex.duration) {
-                // Timed exercise (warmup or plank)
                 if (ex.set) {
                     html += '<div class="set-indicator">Set ' + ex.set + '/' + ex.totalSets + '</div>';
                 }
                 html += '<div class="timer-wrap" id="timerWrap">';
                 html += '<div class="timer-label">Duration</div>';
-                html += '<div class="timer" id="timer">' + fmt(ex.duration) + '</div>';
+                html += '<div class="timer" id="timer">' + fmt(displayTime) + '</div>';
                 html += '<div class="pause-hint">Tap to pause</div>';
                 html += '</div>';
             } else if (ex.set) {
-                // Set-based exercise
                 html += '<div class="set-indicator">Set ' + ex.set + '/' + ex.totalSets + '</div>';
                 html += '<div class="rep-info">' + ex.reps + ' reps</div>';
                 if (ex.weight) html += '<div class="exercise-weight">💪 ' + ex.weight + '</div>';
@@ -498,7 +542,7 @@
             }
 
             if (ex.duration) {
-                startTimer(ex.duration);
+                startTimer(resumeTime || ex.duration);
                 nextBtn.textContent = 'Next';
             } else {
                 nextBtn.textContent = 'Done';
@@ -509,15 +553,18 @@
             } else {
                 backBtn.classList.remove('hidden');
             }
+            
+            saveState();
         }
 
-        function renderRest(dur, nextExName) {
+        function renderRest(dur, nextExName, resumeTime) {
             resting = true;
+            var displayTime = resumeTime || dur;
             var html = '<div class="phase">Rest</div>';
             html += '<div class="exercise-name">Recover</div>';
             html += '<div class="timer-wrap" id="timerWrap">';
             html += '<div class="timer-label">Time Left</div>';
-            html += '<div class="timer" id="timer">' + fmt(dur) + '</div>';
+            html += '<div class="timer" id="timer">' + fmt(displayTime) + '</div>';
             html += '<div class="pause-hint">Tap to pause</div>';
             html += '</div>';
             if (nextExName) {
@@ -531,20 +578,23 @@
                 timerWrap.onclick = togglePause;
             }
 
-            startTimer(dur);
+            startTimer(resumeTime || dur);
             nextBtn.textContent = 'Skip';
             backBtn.classList.remove('hidden');
+            
+            saveState();
         }
 
         function startTimer(dur) {
             timeLeft = dur;
-            paused = false;
             if (tmr) clearInterval(tmr);
             tmr = setInterval(function() {
                 if (!paused) {
                     timeLeft--;
                     var el = document.getElementById('timer');
                     if (el) el.textContent = fmt(timeLeft);
+                    // Save state every 5 seconds
+                    if (timeLeft % 5 === 0) saveState();
                     if (timeLeft <= 0) {
                         clearInterval(tmr);
                         tmr = null;
@@ -615,6 +665,8 @@
 
         function complete() {
             resting = false;
+            started = false;
+            clearState();
             content.innerHTML = '<div class="completion-icon">🇧🇬💪</div>' +
                 '<div class="completion-title">W1 Mon Done!</div>' +
                 '<div class="completion-msg">Walk home = cool down<br><br>Great work today!</div>';
@@ -623,11 +675,52 @@
             progressEl.style.strokeDashoffset = 0;
         }
 
+        // Check for saved state on load
+        function init() {
+            var saved = loadState();
+            if (saved && saved.started) {
+                // Restore state
+                section = saved.section;
+                idx = saved.idx;
+                resting = saved.resting;
+                paused = true; // Always resume paused
+                started = true;
+                
+                if (resting) {
+                    var ex = getEx();
+                    var nxt = getNextEx();
+                    var nextText = nxt ? nxt.name : null;
+                    if (nxt && nxt.set) nextText += ' (Set ' + nxt.set + ')';
+                    renderRest(ex.rest, nextText, saved.timeLeft);
+                    // Apply paused state
+                    var wrap = document.getElementById('timerWrap');
+                    if (wrap) {
+                        wrap.classList.add('paused');
+                        var hint = wrap.querySelector('.pause-hint');
+                        if (hint) hint.textContent = 'Tap to resume';
+                    }
+                } else {
+                    render(saved.timeLeft);
+                    // Apply paused state if it was a timed exercise
+                    var ex = getEx();
+                    if (ex.duration) {
+                        var wrap = document.getElementById('timerWrap');
+                        if (wrap) {
+                            wrap.classList.add('paused');
+                            var hint = wrap.querySelector('.pause-hint');
+                            if (hint) hint.textContent = 'Tap to resume';
+                        }
+                    }
+                }
+            }
+        }
+
         nextBtn.onclick = function() {
             var txt = nextBtn.textContent;
             if (txt === 'Start') {
                 render();
             } else if (txt === 'Restart') {
+                clearState();
                 location.reload();
             } else {
                 onNextClick();
@@ -657,6 +750,13 @@
             render();
         };
 
+        // Save state when page is hidden/closed
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) saveState();
+        });
+        window.addEventListener('beforeunload', saveState);
+        window.addEventListener('pagehide', saveState);
+
         document.addEventListener('touchstart', function(e) {
             if (e.touches.length > 1) e.preventDefault();
         }, { passive: false });
@@ -671,6 +771,9 @@
             if (now - lastTap < 300) e.preventDefault();
             lastTap = now;
         }, false);
+
+        // Initialize on load
+        init();
     </script>
 </body>
 </html>
